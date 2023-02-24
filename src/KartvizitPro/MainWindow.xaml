@@ -1,0 +1,36 @@
+﻿<Window x:Class="KartvizitPro.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KartvizitPro"
+        xmlns:cw="clr-namespace:KartvizitPro.View"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d" Height="768" Width="1366" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        WindowStyle="None" Background="Transparent" AllowsTransparency="True">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Background="#07b96f" CornerRadius="15 0 0 0">
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="KartvizitPro v1.2" Foreground="White"
+                           Margin="15,0,0,0"
+                           Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+        </Border>
+        <Border Background="#07b96f" CornerRadius="0 15 0 0" Grid.Column="1" x:Name="brdrUpLeftRow"
+                MouseDown="brdrUpLeftRow_MouseDown">
+            <DockPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 15 0">
+                <materialDesign:PackIcon Kind="Settings" Style="{DynamicResource btnHelp}" x:Name="btnSetting"
+                                         PreviewMouseLeftButtonDown="btnSetting_PreviewMouseLeftButtonDown"/>
+                <materialDesign:PackIcon Kind="CloseBold" Style="{DynamicResource btnHelp}" x:Name="btnClose"
+                                         PreviewMouseLeftButtonDown="btnClose_PreviewMouseLeftButtonDown"/>
+            </DockPanel>
+        </Border>
+        <cw:CompanyView Grid.Row="1" Grid.ColumnSpan="2"/>
+    </Grid>
+</Window>

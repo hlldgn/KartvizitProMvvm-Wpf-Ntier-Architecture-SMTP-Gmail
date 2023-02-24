@@ -10,9 +10,6 @@ using KartvizitPro.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace KartvizitPro.ViewModel
@@ -30,23 +27,16 @@ namespace KartvizitPro.ViewModel
             companyInsertDto = new CompanyInsertDto();
             addCommand = new RelayCommand(AddCompany);
             deleteCommand = new RelayCommand(DeleteCompany);
+            updateCommand = new RelayCommand(UpdateCompany);
             LoadData();
         }
-        private CompanyInsertDto companyInsertDto;
-
-        public CompanyInsertDto CompanyInsertDto
-        {
-            get { return companyInsertDto; }
-            set { companyInsertDto = value; }
-        }
-
+        #region DeleteOperation
         private RelayCommand deleteCommand;
 
         public RelayCommand DeleteCommand
         {
             get { return deleteCommand; }
         }
-
         private void DeleteCompany()
         {
             try
@@ -64,27 +54,8 @@ namespace KartvizitPro.ViewModel
                 throw new Exception(ex.Message);
             }
         }
-        private CompanyDto companyDto;
-
-        public CompanyDto CompanyDto
-        {
-            get { return companyDto; }
-            set { companyDto = value; OnPropertyChanged("CompanyDto"); }
-        }
-        private void LoadData()
-        {
-            var companies = _companyService.GetAll();
-            var companyDto = mapper._mapper.Map<IEnumerable<Company>,
-                ObservableCollection<CompanyDto>>(companies);
-            CompanyList = companyDto;
-        }
-        private ObservableCollection<CompanyDto> companyList;
-
-        public ObservableCollection<CompanyDto> CompanyList
-        {
-            get { return companyList; }
-            set { companyList = value; OnPropertyChanged("CompanyList"); }
-        }
+        #endregion
+        #region AddOperation
         private RelayCommand addCommand;
 
         public RelayCommand AddCommand
@@ -108,5 +79,53 @@ namespace KartvizitPro.ViewModel
                 throw new Exception(ex.Message);
             }
         }
+        #endregion
+        #region ListOperation
+        private void LoadData()
+        {
+            var companies = _companyService.GetAll();
+            var companyDto = mapper._mapper.Map<IEnumerable<Company>,
+                ObservableCollection<CompanyDto>>(companies);
+            CompanyList = companyDto;
+        }
+        private ObservableCollection<CompanyDto> companyList;
+
+        public ObservableCollection<CompanyDto> CompanyList
+        {
+            get { return companyList; }
+            set { companyList = value; OnPropertyChanged("CompanyList"); }
+        }
+        #endregion
+        #region UpdateOperation
+        private RelayCommand updateCommand;
+
+        public RelayCommand UpdateCommand
+        {
+            get { return updateCommand; }
+        }
+
+        private void UpdateCompany()
+        {
+            UpdateCompanyView form = new UpdateCompanyView(companyDto);
+            form.Show();
+        }
+        #endregion
+        #region CurrentModel
+
+        private CompanyDto companyDto;
+
+        public CompanyDto CompanyDto
+        {
+            get { return companyDto; }
+            set { companyDto = value; OnPropertyChanged("CompanyDto"); }
+        }
+        private CompanyInsertDto companyInsertDto;
+
+        public CompanyInsertDto CompanyInsertDto
+        {
+            get { return companyInsertDto; }
+            set { companyInsertDto = value; }
+        }
+        #endregion
     }
 }

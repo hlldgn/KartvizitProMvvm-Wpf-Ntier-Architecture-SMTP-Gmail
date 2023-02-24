@@ -10,6 +10,7 @@ namespace Business.Abstract
         IEnumerable<TEntity> Search(string search);
         IResult Add(TEntity entity);
         IResult Delete(TEntity entity);
+        IResult Update(TEntity entity);
     }
 }
 

@@ -25,9 +25,9 @@ namespace Business.Concrete
                 return result;
             }
             entity.Email = ConvertChacracter(entity.Email);
-            entity.Phone = ConvertPhone(entity.Phone);
-            entity.Phone2 = ConvertPhone(entity.Phone2);
-            entity.Fax = ConvertPhone(entity.Fax);
+            //entity.Phone = ConvertPhone(entity.Phone);
+            //entity.Phone2 = ConvertPhone(entity.Phone2);
+            //entity.Fax = ConvertPhone(entity.Fax);
             _companyDal.Add(entity);
             return new SuccessResult();
         }
@@ -68,26 +68,26 @@ namespace Business.Concrete
             return mail;
         }
 
-        private string ConvertPhone(string convertPhone)
-        {
-            if (convertPhone != null && convertPhone.Length > 9)
-            {
-                string phoneNumber;
-                if (convertPhone.StartsWith("0"))
-                {
-                    phoneNumber = string.Format("{0} {1} {2} {3}", convertPhone.Substring(1, 3), convertPhone.Substring(4, 3),
-                        convertPhone.Substring(7, 2), convertPhone.Substring(9, 2));
-                    return phoneNumber;
-                }
-                else
-                {
-                    phoneNumber = string.Format("{0} {1} {2} {3}", convertPhone.Substring(0, 3), convertPhone.Substring(3, 3),
-                        convertPhone.Substring(6, 2), convertPhone.Substring(8, 2));
-                }
-                return phoneNumber;
-            }
-            return string.Empty;
-        }
+        //private string ConvertPhone(string convertPhone)
+        //{
+        //    if (convertPhone != null && convertPhone.Length > 9)
+        //    {
+        //        string phoneNumber;
+        //        if (convertPhone.StartsWith("0"))
+        //        {
+        //            phoneNumber = string.Format("{0} {1} {2} {3}", convertPhone.Substring(1, 3), convertPhone.Substring(4, 3),
+        //                convertPhone.Substring(7, 2), convertPhone.Substring(9, 2));
+        //            return phoneNumber;
+        //        }
+        //        else
+        //        {
+        //            phoneNumber = string.Format("{0} {1} {2} {3}", convertPhone.Substring(0, 3), convertPhone.Substring(3, 3),
+        //                convertPhone.Substring(6, 2), convertPhone.Substring(8, 2));
+        //        }
+        //        return phoneNumber;
+        //    }
+        //    return string.Empty;
+        //}
         private IResult CheckifCompanyNameNull(string name)
         {
             if (name.Length>0)
@@ -104,6 +104,23 @@ namespace Business.Concrete
             else
                 return new ErrorResult("Telefon numaraları en az 10 haneden oluşmalıdır.");
 
+        }
+
+        public IResult Update(Company entity)
+        {
+            IResult result = BusinessRules.Run(CheckifPhoneLength(entity.Phone),
+                CheckifPhoneLength(entity.Phone2),
+                CheckifPhoneLength(entity.Fax));
+            if (result != null)
+            {
+                return result;
+            }
+            entity.Email = ConvertChacracter(entity.Email);
+            //entity.Phone = ConvertPhone(entity.Phone);
+            //entity.Phone2 = ConvertPhone(entity.Phone2);
+            //entity.Fax = ConvertPhone(entity.Fax);
+            _companyDal.Update(entity);
+            return new SuccessResult("Güncelleme işlemi başarı ile gerçekleşmiştir.");
         }
     }
 }

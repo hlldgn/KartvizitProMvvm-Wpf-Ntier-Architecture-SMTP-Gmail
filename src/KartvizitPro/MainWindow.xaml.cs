@@ -1,4 +1,5 @@
-﻿using KartvizitPro.ViewModel;
+﻿using KartvizitPro.View;
+using KartvizitPro.ViewModel;
 using System.Windows;
 
 namespace KartvizitPro
@@ -20,7 +21,8 @@ namespace KartvizitPro
 
         private void btnSetting_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-
+            Settings setting = new Settings();
+            setting.ShowDialog();
         }
 
         private void brdrUpLeftRow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

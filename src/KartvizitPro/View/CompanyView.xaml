@@ -68,7 +68,8 @@
                          FontSize="18"
                          Margin="0 0 0 10"
                          MaxLength="11"
-                         Text="{Binding Path=CompanyInsertDto.Phone}"/>
+                         Text="{Binding Path=CompanyInsertDto.Phone}"
+                         PreviewTextInput="TextBox_PreviewTextInput"/>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Grid.Row="3"
                          materialDesign:HintAssist.Hint="Telefon2"
@@ -83,7 +84,8 @@
                          FontSize="18"
                          Margin="0 0 0 10"
                          MaxLength="11"
-                         Text="{Binding Path=CompanyInsertDto.Phone2}"/>
+                         Text="{Binding Path=CompanyInsertDto.Phone2}"
+                         PreviewTextInput="TextBox_PreviewTextInput"/>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  
                          Grid.Row="4"
                          materialDesign:HintAssist.Hint="Fax"
@@ -98,7 +100,8 @@
                          FontSize="18"
                          Margin="0 0 0 10"
                          MaxLength="11"
-                         Text="{Binding Path=CompanyInsertDto.Fax}"/>
+                         Text="{Binding Path=CompanyInsertDto.Fax}"
+                         PreviewTextInput="TextBox_PreviewTextInput"/>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Grid.Row="5"
                          materialDesign:HintAssist.Hint="E-Posta"
@@ -141,7 +144,8 @@
                          FontSize="18"
                          Margin="0 0 0 10"
                          MaxLength="11"
-                         Text="{Binding Path=CompanyInsertDto.No}"/>
+                         Text="{Binding Path=CompanyInsertDto.No}"
+                         PreviewTextInput="TextBox_PreviewTextInput"/>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Grid.Row="8"
                          materialDesign:HintAssist.Hint="Adres"
@@ -182,7 +186,7 @@
                         <ContextMenu>
                             <MenuItem Header="Mail Gönder"/>
                             <MenuItem Header="Sil" Command="{Binding DeleteCommand}"/>
-                            <MenuItem Header="Düzenle"/>
+                            <MenuItem Header="Düzenle" Command="{Binding UpdateCommand}"/>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
@@ -208,7 +212,8 @@
                          materialDesign:HintAssist.FloatingOffset="0,-20"
                          FontSize="18"
                          TextAlignment="Left"
-                         VerticalContentAlignment="Bottom"/>
+                         VerticalContentAlignment="Bottom"
+                         Text="{Binding Path=CompanySearchDto.Search}"/>
                     <Button Content="Mail"
                             Background="#05b790"
                             Foreground="White"

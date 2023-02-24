@@ -82,7 +82,7 @@ namespace KartvizitPro.View
                     cMessageBox.msgLogo.Foreground = Brushes.Gray;
                     break;
             }
-            cMessageBox.ShowDialog();
+            cMessageBox.Show();
             return result;
         }
     }

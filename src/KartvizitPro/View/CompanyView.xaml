@@ -184,7 +184,6 @@
                           SelectedItem="{Binding CompanyDto}">
                     <DataGrid.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Mail Gönder"/>
                             <MenuItem Header="Sil" Command="{Binding DeleteCommand}"/>
                             <MenuItem Header="Düzenle" Command="{Binding UpdateCommand}"/>
                         </ContextMenu>
@@ -213,7 +212,7 @@
                          FontSize="18"
                          TextAlignment="Left"
                          VerticalContentAlignment="Bottom"
-                         Text="{Binding Path=CompanySearchDto.Search}"/>
+                         Text="{Binding Path=CompanySearch,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Mail"
                             Background="#05b790"
                             Foreground="White"
@@ -222,7 +221,9 @@
                             Height="45"
                             materialDesign:ButtonAssist.CornerRadius="15"
                             HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"/>
+                            VerticalAlignment="Bottom"
+                            x:Name="btnMail"
+                            Click="btnMail_Click"/>
                 </DockPanel>
             </StackPanel>
         </Border>

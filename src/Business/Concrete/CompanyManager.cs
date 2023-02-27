@@ -20,7 +20,7 @@ namespace Business.Concrete
                 CheckifPhoneLength(entity.Phone),
                 CheckifPhoneLength(entity.Phone2),
                 CheckifPhoneLength(entity.Fax));
-            if(result!=null)
+            if (result != null)
             {
                 return result;
             }
@@ -50,10 +50,12 @@ namespace Business.Concrete
 
         public IEnumerable<Company> Search(string search)
         {
-            return _companyDal.GetList(x => x.Name.Contains(search)
-            || x.Person.Contains(search)
-            || x.Email.Contains(search)
-            || x.Sector.Contains(search));
+            return _companyDal.GetList(x => x.Name.ToUpper().Contains(search)
+            || x.Person.ToUpper().Contains(search)
+            || x.Email.ToUpper().Contains(search)
+            || x.Sector.ToUpper().Contains(search)
+            || x.Phone.Contains(search)
+            || x.Phone2.Contains(search));
         }
 
         private string ConvertChacracter(string key)
@@ -90,7 +92,7 @@ namespace Business.Concrete
         //}
         private IResult CheckifCompanyNameNull(string name)
         {
-            if (name.Length>0)
+            if (name.Length > 0)
                 return new SuccessResult();
             else
                 return new ErrorResult("Firma Adı Gerekli.");

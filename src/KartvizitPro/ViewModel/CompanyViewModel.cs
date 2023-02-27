@@ -81,6 +81,26 @@ namespace KartvizitPro.ViewModel
         }
         #endregion
         #region ListOperation
+        private string companySearch;
+
+        public string CompanySearch
+        {
+            get { return companySearch; }
+            set
+            { 
+                companySearch = value; 
+                SearchData(companySearch.ToUpper()); 
+                OnPropertyChanged("CompanySearch"); 
+            }
+        }
+
+        private void SearchData(string search)
+        {
+            var companies = _companyService.Search(search);
+            var companyDto = mapper._mapper.Map<IEnumerable<Company>,
+                ObservableCollection<CompanyDto>>(companies);
+            CompanyList = companyDto;
+        }
         private void LoadData()
         {
             var companies = _companyService.GetAll();

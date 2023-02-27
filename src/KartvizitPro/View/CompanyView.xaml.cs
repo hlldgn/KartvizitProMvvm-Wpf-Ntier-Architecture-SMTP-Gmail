@@ -41,5 +41,11 @@ namespace KartvizitPro.View
             Regex regex = new Regex("[^0-9]");
             e.Handled = regex.IsMatch(e.Text);
         }
+
+        private void btnMail_Click(object sender, RoutedEventArgs e)
+        {
+            MailView frm = new MailView();
+            frm.Show();
+        }
     }
 }

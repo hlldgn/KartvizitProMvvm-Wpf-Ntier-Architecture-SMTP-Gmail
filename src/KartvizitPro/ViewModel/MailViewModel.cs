@@ -26,8 +26,11 @@ namespace KartvizitPro.ViewModel
             _companyService = InstanceFactory.GetInstance<ICompanyService>();
             mapper = new MapperMap(_Mapper);
             mailCompanyDto = new MailCompanyDto();
+            mail = String.Empty;
+            selectSector = String.Empty;
             fastAddMail = new RelayCommand(AddFastMail);
             manuelAddMail = new RelayCommand(AddManuelMail);
+            dataGridAddMail = new RelayCommand(AddDataGridMail);
             mailInsert = new ObservableCollection<MailCompanyInsertDto>();
             LoadData();
             GroupBySector();
@@ -45,19 +48,47 @@ namespace KartvizitPro.ViewModel
         {
             get { return fastAddMail; }
         }
+        private RelayCommand dataGridAddMail;
 
+        public RelayCommand DataGridAddMail
+        {
+            get { return dataGridAddMail; }
+        }
+        private MailCompanyInsertDto mailCompanyInsertDto;
+
+        public MailCompanyInsertDto MailCompanyInsertDto
+        {
+            get { return mailCompanyInsertDto; }
+            set { mailCompanyInsertDto = value; OnPropertyChanged("MailCompanyInsertDto"); }
+        }
+
+        private void AddDataGridMail()
+        {
+            if(mailCompanyInsertDto!=null)
+            {
+                if(!MailExists(mailCompanyInsertDto.Email))
+                {
+                    mailInsert.Add(MailCompanyInsertDto);
+                }
+                MailInsert = mailInsert;
+                //TODO:DATAGRİD DOUBLE CLİCK AND RELAY COMMAND COMMİT
+            }
+        }
         private void AddFastMail()
         {
-            var currentSector = selectSector.ToLower();
-            var companies = _companyService.EmailNotNullSectorSearch(currentSector);
-            var mailCompanyInsertDto = mapper._mapper.Map<IEnumerable<Company>,
-                ObservableCollection<MailCompanyInsertDto>>(companies);
-            foreach (var item in mailCompanyInsertDto)
+            if (selectSector != String.Empty && selectSector.Length > 0)
             {
-                if(MailExists(item.Email))
-                    mailInsert.Add(item);
+                var currentSector = selectSector.ToLower();
+                var companies = _companyService.EmailNotNullSectorSearch(currentSector);
+                var mailCompanyInsertDto = mapper._mapper.Map<IEnumerable<Company>,
+                    ObservableCollection<MailCompanyInsertDto>>(companies);
+                foreach (var item in mailCompanyInsertDto)
+                {
+                    if (!MailExists(item.Email))
+                        mailInsert.Add(item);
+                }
+                MailInsert = mailInsert;
             }
-            MailInsert = mailInsert;
         }
         private string mail;
 
@@ -68,9 +99,9 @@ namespace KartvizitPro.ViewModel
         }
         private void AddManuelMail()
         {
-            if (mail.Length > 0)
+            if (mail.Length > 0 && mail != String.Empty)
             {
-                if(MailExists(mail))
+                if (!MailExists(mail))
                 {
                     mailInsert.Add(new MailCompanyInsertDto { Name = "Bilinmiyor", Email = mail });
                     MailInsert = mailInsert;
@@ -84,10 +115,10 @@ namespace KartvizitPro.ViewModel
         {
             if (MailInsert.Count > 0)
             {
-                var result = mailInsert.Any(x => x.Email != mail);
+                var result = mailInsert.Any(x => x.Email == mail);
                 return result;
             }
-            return true;
+            return false;
         }
         //TODO: AYNI MAİL ADRESLERİNİN KAYITLARINI ENGELLEMEYE ÇALIŞIYORUM.
         private RelayCommand manuelAddMail;

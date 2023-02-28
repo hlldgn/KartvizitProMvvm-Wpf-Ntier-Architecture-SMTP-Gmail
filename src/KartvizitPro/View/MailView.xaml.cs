@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KartvizitPro.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,17 @@ namespace KartvizitPro.View
         public MailView()
         {
             InitializeComponent();
+            this.DataContext = new MailViewModel();
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnEkle_Click(object sender, RoutedEventArgs e)
+        {
+            txtAliciEkle.Clear();
         }
     }
 }

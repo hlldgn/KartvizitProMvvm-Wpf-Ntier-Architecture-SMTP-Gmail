@@ -12,6 +12,8 @@ namespace KartvizitPro.Mapper
             cfg.AllowNullDestinationValues = false;
             cfg.CreateMap<Company, CompanyDto>().ReverseMap();
             cfg.CreateMap<Company, CompanyInsertDto>().ReverseMap();
+            cfg.CreateMap<MailCompanyDto, Company>().ReverseMap();
+            cfg.CreateMap<MailCompanyInsertDto, Company>().ReverseMap();
         });
 
         public readonly IMapper _mapper;

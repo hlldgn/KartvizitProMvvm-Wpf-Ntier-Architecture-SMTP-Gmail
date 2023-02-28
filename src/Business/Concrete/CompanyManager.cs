@@ -50,10 +50,10 @@ namespace Business.Concrete
 
         public IEnumerable<Company> Search(string search)
         {
-            return _companyDal.GetList(x => x.Name.ToUpper().Contains(search)
-            || x.Person.ToUpper().Contains(search)
-            || x.Email.ToUpper().Contains(search)
-            || x.Sector.ToUpper().Contains(search)
+            return _companyDal.GetList(x => x.Name.ToLower().Contains(search)
+            || x.Person.ToLower().Contains(search)
+            || x.Email.ToLower().Contains(search)
+            || x.Sector.ToLower().Contains(search)
             || x.Phone.Contains(search)
             || x.Phone2.Contains(search));
         }
@@ -123,6 +123,23 @@ namespace Business.Concrete
             //entity.Fax = ConvertPhone(entity.Fax);
             _companyDal.Update(entity);
             return new SuccessResult("Güncelleme işlemi başarı ile gerçekleşmiştir.");
+        }
+
+        public IEnumerable<Company> EmailNotNull()
+        {
+            return _companyDal.GetList(x=>x.Email.Length>0);
+        }
+
+        public IEnumerable<Company> EmailNotNullSearch(string search)
+        {
+            return _companyDal.GetList(x => x.Email.Length > 0 && (x.Email.ToLower().Contains(search)
+            ||x.Name.ToLower().Contains(search)
+            ||x.Sector.ToLower().Contains(search)));
+        }
+
+        public IEnumerable<Company> EmailNotNullSectorSearch(string search)
+        {
+            return _companyDal.GetList(x => x.Email.Length > 0 && x.Sector.ToLower().Contains(search));
         }
     }
 }

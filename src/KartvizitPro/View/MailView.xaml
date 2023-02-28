@@ -32,11 +32,12 @@
                       CanUserResizeRows="False"
                       BorderBrush="#05b790"
                       BorderThickness="0 0 0 1"
-                      Margin="10 20 10 20">
+                      Margin="10 20 10 20"
+                      ItemsSource="{Binding Path=CompanyList}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Firma Adı" Width="auto"/>
-                        <DataGridTextColumn Header="Sektör" Width="auto"/>
-                        <DataGridTextColumn Header="E-Posta" Width="auto"/>
+                        <DataGridTextColumn Header="Firma Adı" Width="auto" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Sektör" Width="auto" Binding="{Binding Sector}"/>
+                        <DataGridTextColumn Header="E-Posta" Width="auto" Binding="{Binding Email}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBox Grid.Row="1" Margin="10 20 0 0" Width="420" VerticalAlignment="Bottom" HorizontalAlignment="Left"
@@ -48,12 +49,15 @@
                          materialDesign:HintAssist.FloatingOffset="0,-20"
                          FontSize="18"
                          TextAlignment="Left"
-                         VerticalContentAlignment="Bottom"/>
+                         VerticalContentAlignment="Bottom"
+                         Text="{Binding Path=CompanySearch,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </Border>
         <Border Grid.Column="1" Grid.Row="1" Background="WhiteSmoke">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -69,7 +73,9 @@
                               FontSize="18"
                               Margin="20 10 20 10"
                               Width="700"
-                              Height="50"/>
+                              Height="50"
+                              ItemsSource="{Binding Sector}"
+                              SelectedValue="{Binding SelectSector}"/>
                     <Button Content="Hızlı Ekle"
                             Background="#05b790"
                             Foreground="White"
@@ -79,7 +85,8 @@
                             materialDesign:ButtonAssist.CornerRadius="15"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
-                            Margin="10 10 20 10"/>
+                            Margin="10 10 20 10"
+                            Command="{Binding FastAddMail}"/>
                 </DockPanel>
                 <DockPanel Grid.Row="1">
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -94,7 +101,9 @@
                          VerticalContentAlignment="Bottom"
                          FontSize="18"
                          HorizontalAlignment="Left"
-                         Margin="20 10 20 10"/>
+                         Margin="20 10 20 10"
+                         Text="{Binding Path=Mail}"
+                         x:Name="txtAliciEkle"/>
                     <Button Content="Ekle"
                             Background="#05b790"
                             Foreground="White"
@@ -104,14 +113,17 @@
                             materialDesign:ButtonAssist.CornerRadius="15"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
-                            Margin="10 10 20 10"/>
+                            Margin="10 10 20 10"
+                            Command="{Binding ManuelAddMail}"
+                            x:Name="btnEkle"
+                            Click="btnEkle_Click"/>
                 </DockPanel>
-                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False"
-                          CanUserResizeRows="False" IsReadOnly="True" Grid.Row="2"
-                          Margin="20 10 20 10">
+                <DataGrid Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False"
+                          CanUserResizeRows="False" IsReadOnly="True"
+                          Margin="20 10 20 10" ItemsSource="{Binding MailInsert,UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Firma Adı" Width="400"/>
-                        <DataGridTextColumn Header="E-Posta" Width="400"/>
+                        <DataGridTextColumn Header="Firma Adı" Width="400" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="E-Posta" Width="400" Binding="{Binding Email}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -140,6 +152,61 @@
                              HorizontalAlignment="Left"
                              Grid.Row="4"
                              Margin="20 10 20 10"/>
+                <DockPanel Grid.Row="5">
+                    <ListView Margin="20" Height="250"
+                          Width="450" VerticalAlignment="Center" HorizontalAlignment="Left"
+                          BorderBrush="#05b790"
+                          BorderThickness="0 0 0 1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Dosya Adı" Width="auto"/>
+                                <GridViewColumn Header="Dosya Yolu" Width="auto"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Image Margin="20">
+
+                    </Image>
+                </DockPanel>
+                <Grid Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="625"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Dosya Ekle"
+                            Background="#05b790"
+                            Foreground="White"
+                            FontSize="18"
+                            Width="120"
+                            Height="45"
+                            materialDesign:ButtonAssist.CornerRadius="15"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Margin="10 10 20 10"/>
+                    <Button Grid.Column="1" Content="Çıkış"
+                            Background="DarkRed"
+                            Foreground="White"
+                            FontSize="18"
+                            Width="120"
+                            Height="45"
+                            materialDesign:ButtonAssist.CornerRadius="15"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Margin="10 10 20 10"
+                            x:Name="btnExit"
+                            Click="btnExit_Click"/>
+                    <Button Grid.Column="2" Content="Gönder"
+                            Background="#05b790"
+                            Foreground="White"
+                            FontSize="18"
+                            Width="120"
+                            Height="45"
+                            materialDesign:ButtonAssist.CornerRadius="15"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Margin="10 10 20 10"/>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

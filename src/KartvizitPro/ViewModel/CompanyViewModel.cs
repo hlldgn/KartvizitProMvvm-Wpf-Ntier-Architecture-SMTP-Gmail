@@ -89,7 +89,7 @@ namespace KartvizitPro.ViewModel
             set
             { 
                 companySearch = value; 
-                SearchData(companySearch.ToUpper()); 
+                SearchData(companySearch.ToLower()); 
                 OnPropertyChanged("CompanySearch"); 
             }
         }

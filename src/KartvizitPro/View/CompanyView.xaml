@@ -39,6 +39,7 @@
                          VerticalContentAlignment="Bottom"
                          FontSize="18"
                          Margin="0 0 0 10"
+                         CharacterCasing="Upper"
                          Text="{Binding Path=CompanyInsertDto.Name}"/>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Grid.Row="1"
@@ -53,6 +54,7 @@
                          VerticalContentAlignment="Bottom"
                          FontSize="18"
                          Margin="0 0 0 10"
+                         CharacterCasing="Upper"
                          Text="{Binding Path=CompanyInsertDto.Sector}"/>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Grid.Row="2"
@@ -115,6 +117,7 @@
                          VerticalContentAlignment="Bottom"
                          FontSize="18"
                          Margin="0 0 0 10"
+                         CharacterCasing="Lower"
                          Text="{Binding Path=CompanyInsertDto.Email}"/>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Grid.Row="6"
@@ -212,6 +215,7 @@
                          FontSize="18"
                          TextAlignment="Left"
                          VerticalContentAlignment="Bottom"
+                         CharacterCasing="Upper"
                          Text="{Binding Path=CompanySearch,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Mail"
                             Background="#05b790"

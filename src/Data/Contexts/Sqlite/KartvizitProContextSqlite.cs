@@ -17,6 +17,7 @@ namespace Data.Contexts.Sqlite
                 c.ToTable("Company").HasKey(k => k.Id);
                 c.Property(p=>p.Name).IsRequired();
             });
+            modelBuilder.UseCollation("Turkish_CI_AS");
         }
         public DbSet<Company> Company { get; set; }
     }

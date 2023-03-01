@@ -5,14 +5,12 @@ using Entites.Concrete;
 using KartvizitPro.Commands;
 using KartvizitPro.Mapper;
 using KartvizitPro.Model;
-using KartvizitPro.Model.Enums;
 using KartvizitPro.View;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KartvizitPro.ViewModel
 {
@@ -26,6 +24,7 @@ namespace KartvizitPro.ViewModel
             _companyService = InstanceFactory.GetInstance<ICompanyService>();
             mapper = new MapperMap(_Mapper);
             mailCompanyDto = new MailCompanyDto();
+            mailCompanyInsertDto = new MailCompanyInsertDto();
             mail = String.Empty;
             selectSector = String.Empty;
             fastAddMail = new RelayCommand(AddFastMail);
@@ -35,6 +34,73 @@ namespace KartvizitPro.ViewModel
             LoadData();
             GroupBySector();
         }
+        #region CompanyList
+        private MailCompanyDto mailCompanyDto;
+
+        public MailCompanyDto MailCompanyDto
+        {
+            get { return mailCompanyDto; }
+            set { mailCompanyDto = value; OnPropertyChanged("MailCompanyDto"); }
+        }
+        private ObservableCollection<MailCompanyDto> companyList;
+
+        public ObservableCollection<MailCompanyDto> CompanyList
+        {
+            get { return companyList; }
+            set { companyList = value; OnPropertyChanged("CompanyList"); }
+        }
+        private void LoadData()
+        {
+            var companies = _companyService.EmailNotNull();
+            var mailCompanyDto = mapper._mapper.Map<IEnumerable<Company>,
+                ObservableCollection<MailCompanyDto>>(companies);
+            CompanyList = mailCompanyDto;
+        }
+        #endregion
+        #region CompanySearch
+        private string companySearch;
+
+        public string CompanySearch
+        {
+            get { return companySearch; }
+            set
+            {
+                companySearch = value; SearchData(companySearch);
+                OnPropertyChanged("CompanySearch");
+            }
+        }
+        private void SearchData(string search)
+        {
+            var companies = _companyService.EmailNotNullSearch(search);
+            var mailCompanyDto = mapper._mapper.Map<IEnumerable<Company>,
+                ObservableCollection<MailCompanyDto>>(companies);
+            CompanyList = mailCompanyDto;
+        }
+        #endregion
+        #region GroupBySector
+        private string selectSector;
+
+        public string SelectSector
+        {
+            get { return selectSector; }
+            set { selectSector = value; OnPropertyChanged("SelectSector"); }
+        }
+
+        private List<string> sector;
+
+        public List<string> Sector
+        {
+            get { return sector; }
+            set { sector = value; OnPropertyChanged("Sector"); }
+        }
+        private void GroupBySector()
+        {
+            var items = _companyService.GetAll();
+            var group = items.Select(x => x.Sector).Distinct().ToList();
+            Sector = group;
+        }
+        #endregion
+        #region MailInsert
         private ObservableCollection<MailCompanyInsertDto> mailInsert;
 
         public ObservableCollection<MailCompanyInsertDto> MailInsert
@@ -54,6 +120,7 @@ namespace KartvizitPro.ViewModel
         {
             get { return dataGridAddMail; }
         }
+
         private MailCompanyInsertDto mailCompanyInsertDto;
 
         public MailCompanyInsertDto MailCompanyInsertDto
@@ -64,21 +131,18 @@ namespace KartvizitPro.ViewModel
 
         private void AddDataGridMail()
         {
-            if(mailCompanyInsertDto!=null)
+            if (!MailExists(mailCompanyDto.Email))
             {
-                if(!MailExists(mailCompanyInsertDto.Email))
-                {
-                    mailInsert.Add(MailCompanyInsertDto);
-                }
-                MailInsert = mailInsert;
-                //TODO:DATAGRİD DOUBLE CLİCK AND RELAY COMMAND COMMİT
+                mailInsert.Add(new MailCompanyInsertDto { Name=mailCompanyDto.Name,
+                Email=mailCompanyDto.Email});
             }
+            MailInsert = mailInsert;
         }
         private void AddFastMail()
         {
             if (selectSector != String.Empty && selectSector.Length > 0)
             {
-                var currentSector = selectSector.ToLower();
+                var currentSector = selectSector;
                 var companies = _companyService.EmailNotNullSectorSearch(currentSector);
                 var mailCompanyInsertDto = mapper._mapper.Map<IEnumerable<Company>,
                     ObservableCollection<MailCompanyInsertDto>>(companies);
@@ -108,8 +172,8 @@ namespace KartvizitPro.ViewModel
                 }
             }
             else
-                CMessageBox.Show("Öncelikle alıcı mail adresini girmeniz gerekmektedir.",
-                    CMessageTitle.Hata, CMessageButton.Tamam, CMessageButton.İptal);
+                CustomMessageBoxViewModel.ShowDialog("Öncelikle alıcı mail adresini girmeniz gerekmektedir.",
+                    "Hata",System.Windows.MessageBoxButton.OK,PackIconKind.Error);
         }
         private bool MailExists(string mail)
         {
@@ -120,79 +184,13 @@ namespace KartvizitPro.ViewModel
             }
             return false;
         }
-        //TODO: AYNI MAİL ADRESLERİNİN KAYITLARINI ENGELLEMEYE ÇALIŞIYORUM.
         private RelayCommand manuelAddMail;
 
         public RelayCommand ManuelAddMail
         {
             get { return manuelAddMail; }
         }
-
-
-        private string selectSector;
-
-        public string SelectSector
-        {
-            get { return selectSector; }
-            set { selectSector = value; OnPropertyChanged("SelectSector"); }
-        }
-
-        private List<string> sector;
-
-        public List<string> Sector
-        {
-            get { return sector; }
-            set { sector = value; OnPropertyChanged("Sector"); }
-        }
-        private void GroupBySector()
-        {
-            var items = _companyService.GetAll();
-            var group = items.Select(x => x.Sector.ToLower()).Distinct().ToList();
-            Sector = group;
-        }
-
-
-        private string companySearch;
-
-        public string CompanySearch
-        {
-            get { return companySearch; }
-            set
-            {
-                companySearch = value; SearchData(companySearch.ToLower());
-                OnPropertyChanged("CompanySearch");
-            }
-        }
-        private void SearchData(string search)
-        {
-            var companies = _companyService.EmailNotNullSearch(search);
-            var mailCompanyDto = mapper._mapper.Map<IEnumerable<Company>,
-                ObservableCollection<MailCompanyDto>>(companies);
-            CompanyList = mailCompanyDto;
-        }
-
-        private MailCompanyDto mailCompanyDto;
-
-        public MailCompanyDto MailCompanyDto
-        {
-            get { return mailCompanyDto; }
-            set { mailCompanyDto = value; OnPropertyChanged("MailCompanyDto"); }
-        }
-        private ObservableCollection<MailCompanyDto> companyList;
-
-        public ObservableCollection<MailCompanyDto> CompanyList
-        {
-            get { return companyList; }
-            set { companyList = value; OnPropertyChanged("CompanyList"); }
-        }
-        private void LoadData()
-        {
-            var companies = _companyService.EmailNotNull();
-            var mailCompanyDto = mapper._mapper.Map<IEnumerable<Company>,
-                ObservableCollection<MailCompanyDto>>(companies);
-            CompanyList = mailCompanyDto;
-        }
-
+        #endregion
 
     }
 }

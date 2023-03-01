@@ -5,11 +5,12 @@ using Entites.Concrete;
 using KartvizitPro.Commands;
 using KartvizitPro.Mapper;
 using KartvizitPro.Model;
-using KartvizitPro.Model.Enums;
 using KartvizitPro.View;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace KartvizitPro.ViewModel
@@ -41,8 +42,8 @@ namespace KartvizitPro.ViewModel
         {
             try
             {
-                if (DialogResult.Yes == CMessageBox.Show(CompanyDto.Name + " Adlı Firmayı silmek istediğinize emin misiniz?",
-                    CMessageTitle.Onay, CMessageButton.Evet, CMessageButton.Hayır))
+                if (MessageBoxResult.Yes== CustomMessageBoxViewModel.ShowDialog(CompanyDto.Name + " Adlı Firmayı silmek istediğinize emin misiniz?",
+                    "Onay", MessageBoxButton.YesNo, PackIconKind.QuestionAnswer))
                 {
                     var company = mapper._mapper.Map<CompanyDto, Company>(CompanyDto);
                     var result = _companyService.Delete(company);
@@ -70,7 +71,7 @@ namespace KartvizitPro.ViewModel
                 var message = _companyService.Add(company);
                 if (message.Message != null)
                 {
-                    CMessageBox.Show(message.Message, CMessageTitle.Hata, CMessageButton.Tamam, CMessageButton.İptal);
+                    CustomMessageBoxViewModel.ShowDialog(message.Message,"Hata",MessageBoxButton.OK,PackIconKind.Error);
                 }
                 LoadData();
             }
@@ -89,7 +90,7 @@ namespace KartvizitPro.ViewModel
             set
             { 
                 companySearch = value; 
-                SearchData(companySearch.ToLower()); 
+                SearchData(companySearch); 
                 OnPropertyChanged("CompanySearch"); 
             }
         }

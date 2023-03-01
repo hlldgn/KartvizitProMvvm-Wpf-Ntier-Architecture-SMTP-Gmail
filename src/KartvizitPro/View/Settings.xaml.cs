@@ -1,7 +1,9 @@
-﻿using KartvizitPro.Model.Enums;
+﻿using KartvizitPro.ViewModel;
+using MaterialDesignThemes.Wpf;
 using System.IO;
 using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using System.Xml;
 
 namespace KartvizitPro.View
@@ -46,7 +48,7 @@ namespace KartvizitPro.View
                                 txtTitle.Text = read.ReadString();
                                 break;
                             case "Body":
-                                txtBody.Text = read.ReadString();
+                                txtBody.AppendText(read.ReadString());
                                 break;
                         }
                     }
@@ -59,6 +61,8 @@ namespace KartvizitPro.View
         {
             if (txtGmailAddress.Text.Length > 0 && txtPassword.Password.Length > 0)
             {
+                TextRange bodytxt = new TextRange(txtBody.Document.ContentStart,
+                    txtBody.Document.ContentEnd);
                 XmlTextWriter write = new XmlTextWriter("Mail.xml", Encoding.UTF8);
                 write.Formatting = Formatting.Indented;
                 write.WriteStartDocument();
@@ -74,15 +78,15 @@ namespace KartvizitPro.View
                     write.WriteElementString("ccbcc", "1");
 
                 write.WriteElementString("Title", txtTitle.Text);
-                write.WriteElementString("Body", txtBody.Text);
+                write.WriteElementString("Body",bodytxt.Text);
                 write.WriteEndElement();
                 write.Close();
-                CMessageBox.Show("Bilgiler başarı ile eklendi.", CMessageTitle.Bilgi,CMessageButton.Tamam, CMessageButton.İptal);
+                CustomMessageBoxViewModel.ShowDialog("Bilgiler başarı ile eklendi.","Bilgi",MessageBoxButton.OK, PackIconKind.Information);
                 this.Close();
             }
             else
             {
-                CMessageBox.Show("Gmail adresinizi ve şifrenizi girmeniz gerekmektedir.", CMessageTitle.Hata, CMessageButton.Tamam, CMessageButton.İptal);
+                CustomMessageBoxViewModel.ShowDialog("Gmail adresinizi ve şifrenizi girmeniz gerekmektedir.", "Hata", MessageBoxButton.OK, PackIconKind.Error);
             }
         }
 

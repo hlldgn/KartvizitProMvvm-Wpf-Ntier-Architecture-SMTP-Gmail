@@ -50,10 +50,9 @@ namespace Business.Concrete
 
         public IEnumerable<Company> Search(string search)
         {
-            return _companyDal.GetList(x => x.Name.ToLower().Contains(search)
-            || x.Person.ToLower().Contains(search)
-            || x.Email.ToLower().Contains(search)
-            || x.Sector.ToLower().Contains(search)
+            return _companyDal.GetList(x => x.Name.Contains(search)
+            || x.Person.Contains(search)
+            || x.Sector.Contains(search)
             || x.Phone.Contains(search)
             || x.Phone2.Contains(search));
         }
@@ -69,27 +68,6 @@ namespace Business.Concrete
             }
             return mail;
         }
-
-        //private string ConvertPhone(string convertPhone)
-        //{
-        //    if (convertPhone != null && convertPhone.Length > 9)
-        //    {
-        //        string phoneNumber;
-        //        if (convertPhone.StartsWith("0"))
-        //        {
-        //            phoneNumber = string.Format("{0} {1} {2} {3}", convertPhone.Substring(1, 3), convertPhone.Substring(4, 3),
-        //                convertPhone.Substring(7, 2), convertPhone.Substring(9, 2));
-        //            return phoneNumber;
-        //        }
-        //        else
-        //        {
-        //            phoneNumber = string.Format("{0} {1} {2} {3}", convertPhone.Substring(0, 3), convertPhone.Substring(3, 3),
-        //                convertPhone.Substring(6, 2), convertPhone.Substring(8, 2));
-        //        }
-        //        return phoneNumber;
-        //    }
-        //    return string.Empty;
-        //}
         private IResult CheckifCompanyNameNull(string name)
         {
             if (name.Length > 0)
@@ -118,9 +96,6 @@ namespace Business.Concrete
                 return result;
             }
             entity.Email = ConvertChacracter(entity.Email);
-            //entity.Phone = ConvertPhone(entity.Phone);
-            //entity.Phone2 = ConvertPhone(entity.Phone2);
-            //entity.Fax = ConvertPhone(entity.Fax);
             _companyDal.Update(entity);
             return new SuccessResult("Güncelleme işlemi başarı ile gerçekleşmiştir.");
         }
@@ -132,14 +107,13 @@ namespace Business.Concrete
 
         public IEnumerable<Company> EmailNotNullSearch(string search)
         {
-            return _companyDal.GetList(x => x.Email.Length > 0 && (x.Email.ToLower().Contains(search)
-            ||x.Name.ToLower().Contains(search)
-            ||x.Sector.ToLower().Contains(search)));
+            return _companyDal.GetList(x => x.Email.Length > 0 && (x.Name.Contains(search)
+            ||x.Sector.Contains(search)));
         }
 
         public IEnumerable<Company> EmailNotNullSectorSearch(string search)
         {
-            return _companyDal.GetList(x => x.Email.Length > 0 && x.Sector.ToLower().Contains(search));
+            return _companyDal.GetList(x => x.Email.Length > 0 && x.Sector.Contains(search));
         }
     }
 }

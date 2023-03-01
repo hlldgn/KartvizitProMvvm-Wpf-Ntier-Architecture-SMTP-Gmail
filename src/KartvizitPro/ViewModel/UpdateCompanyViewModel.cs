@@ -5,9 +5,10 @@ using Entites.Concrete;
 using KartvizitPro.Commands;
 using KartvizitPro.Mapper;
 using KartvizitPro.Model;
-using KartvizitPro.Model.Enums;
 using KartvizitPro.View;
+using MaterialDesignThemes.Wpf;
 using System;
+using System.Windows;
 
 namespace KartvizitPro.ViewModel
 {
@@ -40,8 +41,8 @@ namespace KartvizitPro.ViewModel
 
                 if (result.Message != null)
                 {
-                    CMessageBox.Show(result.Message, CMessageTitle.Hata, CMessageButton.Tamam,
-                        CMessageButton.İptal);
+                    CustomMessageBoxViewModel.ShowDialog(result.Message,"Hata", MessageBoxButton.OK,
+                        PackIconKind.Error);
                 }
             }
             catch (Exception ex)

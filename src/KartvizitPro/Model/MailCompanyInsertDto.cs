@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows;
 
 namespace KartvizitPro.Model
 {
@@ -26,7 +27,5 @@ namespace KartvizitPro.Model
             get { return email; }
             set { email = value; OnPropertyChanged("Email"); }
         }
-
-
     }
 }

@@ -41,8 +41,8 @@ namespace KartvizitPro.ViewModel
 
                 if (result.Message != null)
                 {
-                    CustomMessageBoxViewModel.ShowDialog(result.Message,"Hata", MessageBoxButton.OK,
-                        PackIconKind.Error);
+                    CustomMessageBoxViewModel.ShowDialog(result.Message,MessageBoxButton.OK,
+                        PackIconKind.Information);
                 }
             }
             catch (Exception ex)

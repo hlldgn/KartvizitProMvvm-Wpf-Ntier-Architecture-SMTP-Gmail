@@ -8,17 +8,6 @@ namespace KartvizitPro.View
     /// </summary>
     public partial class CustomMessageBox : Window
     {
-        public string Caption
-        {
-            get
-            {
-                return Title;
-            }
-            set
-            {
-                Title = value;
-            }
-        }
         public string Message
         {
             get
@@ -84,13 +73,12 @@ namespace KartvizitPro.View
             }
         }
 
-        public CustomMessageBox(string message, string caption,
+        public CustomMessageBox(string message,
             MessageBoxButton button, PackIconKind? icon)
         {
             InitializeComponent();
 
             Message = message;
-            Caption = caption ?? string.Empty;
             DisplayImage(icon);
             DisplayButtons(button);
         }

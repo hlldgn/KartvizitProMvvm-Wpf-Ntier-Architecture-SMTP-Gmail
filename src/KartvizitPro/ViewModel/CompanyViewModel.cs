@@ -43,7 +43,7 @@ namespace KartvizitPro.ViewModel
             try
             {
                 if (MessageBoxResult.Yes== CustomMessageBoxViewModel.ShowDialog(CompanyDto.Name + " Adlı Firmayı silmek istediğinize emin misiniz?",
-                    "Onay", MessageBoxButton.YesNo, PackIconKind.QuestionAnswer))
+                    MessageBoxButton.YesNo, PackIconKind.QuestionMark))
                 {
                     var company = mapper._mapper.Map<CompanyDto, Company>(CompanyDto);
                     var result = _companyService.Delete(company);
@@ -71,7 +71,7 @@ namespace KartvizitPro.ViewModel
                 var message = _companyService.Add(company);
                 if (message.Message != null)
                 {
-                    CustomMessageBoxViewModel.ShowDialog(message.Message,"Hata",MessageBoxButton.OK,PackIconKind.Error);
+                    CustomMessageBoxViewModel.ShowDialog(message.Message,MessageBoxButton.OK,PackIconKind.Error);
                 }
                 LoadData();
             }

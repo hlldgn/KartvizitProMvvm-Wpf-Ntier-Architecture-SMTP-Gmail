@@ -10,7 +10,14 @@ using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.NetworkInformation;
+using System.Windows;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace KartvizitPro.ViewModel
 {
@@ -19,17 +26,29 @@ namespace KartvizitPro.ViewModel
         private readonly ICompanyService _companyService;
         private readonly IMapper _Mapper;
         private readonly MapperMap mapper;
+        private string BccCC = string.Empty;
+        private string mailAddress = string.Empty;
+        private string password = string.Empty;
         public MailViewModel()
         {
             _companyService = InstanceFactory.GetInstance<ICompanyService>();
             mapper = new MapperMap(_Mapper);
             mailCompanyDto = new MailCompanyDto();
             mailCompanyInsertDto = new MailCompanyInsertDto();
+            fileInsert = new ObservableCollection<FileAddOpenFileDto>();
+            fileAddOpenFileDto = new FileAddOpenFileDto();
+            AddMailDataGridVisible = Visibility.Collapsed;
+            FileVisibilty = Visibility.Collapsed;
+            dataGridCount = String.Empty;
             mail = String.Empty;
             selectSector = String.Empty;
             fastAddMail = new RelayCommand(AddFastMail);
             manuelAddMail = new RelayCommand(AddManuelMail);
             dataGridAddMail = new RelayCommand(AddDataGridMail);
+            removeItem = new RelayCommand(RemoveDataGridMail);
+            fileAddCommand = new RelayCommand(FileAdd);
+            fileRemoveItem = new RelayCommand(FileRemoveDataGrid);
+            sendMail = new RelayCommand(SendToMail);
             mailInsert = new ObservableCollection<MailCompanyInsertDto>();
             LoadData();
             GroupBySector();
@@ -128,15 +147,38 @@ namespace KartvizitPro.ViewModel
             get { return mailCompanyInsertDto; }
             set { mailCompanyInsertDto = value; OnPropertyChanged("MailCompanyInsertDto"); }
         }
+        private Visibility addMailDataGridVisible;
 
+        public Visibility AddMailDataGridVisible
+        {
+            get { return addMailDataGridVisible; }
+            set { addMailDataGridVisible = value; OnPropertyChanged("AddMailDataGridVisible"); }
+        }
+        private string dataGridCount;
+
+        public string DataGridCount
+        {
+            get { return dataGridCount; }
+            set { dataGridCount = value; OnPropertyChanged("DataGridCount"); }
+        }
+
+        private string DataGridRowCountText(ObservableCollection<MailCompanyInsertDto> mails)
+        {
+            return mails.Count().ToString() + " Adet Firma Eklendi.";
+        }
         private void AddDataGridMail()
         {
             if (!MailExists(mailCompanyDto.Email))
             {
-                mailInsert.Add(new MailCompanyInsertDto { Name=mailCompanyDto.Name,
-                Email=mailCompanyDto.Email});
+                mailInsert.Add(new MailCompanyInsertDto
+                {
+                    Name = mailCompanyDto.Name,
+                    Email = mailCompanyDto.Email
+                });
             }
             MailInsert = mailInsert;
+            AddMailDataGridVisible = Visibility.Visible;
+            DataGridCount = DataGridRowCountText(mailInsert);
         }
         private void AddFastMail()
         {
@@ -152,6 +194,8 @@ namespace KartvizitPro.ViewModel
                         mailInsert.Add(item);
                 }
                 MailInsert = mailInsert;
+                AddMailDataGridVisible = Visibility.Visible;
+                DataGridCount = DataGridRowCountText(mailInsert);
             }
         }
         private string mail;
@@ -169,11 +213,13 @@ namespace KartvizitPro.ViewModel
                 {
                     mailInsert.Add(new MailCompanyInsertDto { Name = "Bilinmiyor", Email = mail });
                     MailInsert = mailInsert;
+                    AddMailDataGridVisible = Visibility.Visible;
+                    DataGridCount = DataGridRowCountText(mailInsert);
                 }
             }
             else
                 CustomMessageBoxViewModel.ShowDialog("Öncelikle alıcı mail adresini girmeniz gerekmektedir.",
-                    "Hata",System.Windows.MessageBoxButton.OK,PackIconKind.Error);
+                    System.Windows.MessageBoxButton.OK, PackIconKind.Error);
         }
         private bool MailExists(string mail)
         {
@@ -191,6 +237,214 @@ namespace KartvizitPro.ViewModel
             get { return manuelAddMail; }
         }
         #endregion
+        #region MailRemoveItem
+        private RelayCommand removeItem;
 
+        public RelayCommand RemoveItem
+        {
+            get { return removeItem; }
+        }
+        private void RemoveDataGridMail()
+        {
+            MailInsert.Remove(mailCompanyInsertDto);
+            if (MailInsert.Count <= 0)
+                AddMailDataGridVisible = Visibility.Collapsed;
+            else
+                DataGridCount = MailInsert.Count().ToString() + " Adet Firma Eklendi.";
+        }
+        #endregion
+        #region FileInsert
+        private RelayCommand fileAddCommand;
+
+        public RelayCommand FileAddCommand
+        {
+            get { return fileAddCommand; }
+        }
+        private ObservableCollection<FileAddOpenFileDto> fileInsert;
+
+        public ObservableCollection<FileAddOpenFileDto> FileInsert
+        {
+            get { return fileInsert; }
+            set { fileInsert = value; OnPropertyChanged("FileInsert"); }
+        }
+        private FileAddOpenFileDto fileAddOpenFileDto;
+
+        public FileAddOpenFileDto FileAddOpenFileDto
+        {
+            get { return fileAddOpenFileDto; }
+            set { fileAddOpenFileDto = value; OnPropertyChanged("FileAddOpenFileDto"); }
+        }
+
+
+        private void FileAdd()
+        {
+            OpenFileDialog openFile = new OpenFileDialog();
+            openFile.Multiselect = true;
+            openFile.Title = "Aç";
+            openFile.Filter = "Excel (*.xlsx)|*.xlsx" +
+                "|Excel (*.xls)|*.xls" +
+                "|Bitmap (*.bmp)|*.bmp" +
+                "|Jpeg (*.jpg)|*.jpg" +
+                "|Pdf (*.pdf)|*.pdf" +
+                "|Word (*.doc)|*.doc" +
+                "|Word (*.docx)|*.docx";
+            openFile.RestoreDirectory = true;
+            openFile.FilterIndex = 3;
+            if (DialogResult.OK == openFile.ShowDialog())
+            {
+                if (openFile.FileNames.Length > 0)
+                {
+                    FileVisibilty = Visibility.Visible;
+                    string[] fileName = openFile.FileNames;
+                    string[] safeFileName = openFile.SafeFileNames;
+
+                    for (int i = 0; i < openFile.FileNames.Count(); i++)
+                    {
+                        FileInsert.Add(new FileAddOpenFileDto
+                        {
+                            FileName = fileName[i],
+                            SafeFileName = safeFileName[i]
+                        });
+                    }
+                }
+            }
+        }
+        private Visibility fileVisibilty;
+
+        public Visibility FileVisibilty
+        {
+            get { return fileVisibilty; }
+            set { fileVisibilty = value; OnPropertyChanged("FileVisibilty"); }
+        }
+
+        #endregion
+        #region FileRemoveItem
+        private RelayCommand fileRemoveItem;
+
+        public RelayCommand FileRemoveItem
+        {
+            get { return fileRemoveItem; }
+        }
+        private void FileRemoveDataGrid()
+        {
+            FileInsert.Remove(FileAddOpenFileDto);
+            if (FileInsert.Count <= 0)
+                FileVisibilty = Visibility.Collapsed;
+        }
+
+        #endregion
+        #region SendMail
+        private RelayCommand sendMail;
+
+        public RelayCommand SendMail
+        {
+            get { return sendMail; }
+        }
+        private bool ReadMailSettings()
+        {
+            if (File.Exists("Mail.xml"))
+            {
+                XmlTextReader read = new XmlTextReader("Mail.xml");
+                while (read.Read())
+                {
+                    if (read.NodeType == XmlNodeType.Element)
+                    {
+                        switch (read.Name)
+                        {
+                            case "ccbcc":
+                                if (read.ReadString() == "0")
+                                {
+                                    BccCC = "BCC";
+                                }
+                                else
+                                {
+                                    BccCC = "CC";
+                                }
+                                break;
+                            case "MailAddress":
+                                mailAddress = read.ReadString();
+                                break;
+                            case "Password":
+                                password = read.ReadString();
+                                break;
+
+                        }
+                    }
+                }
+                read.Close();
+                return true;
+            }
+            return false;
+        }
+        private void SendToMail() // TODO: MAİL GÖNDERME İŞLEMİ BAŞARILI GERÇEKLEŞTİ
+            //BİRAZ CONFİGURATİON YAPMAK LAZIM SADECE KOLAY GELSİN HALİL :))))
+        {
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                if (ReadMailSettings())
+                {
+                    if (MailInsert.Count > 0)
+                    {
+                        SmtpClient smtp = new SmtpClient();
+                        smtp.Port = 587;
+                        smtp.Host = "smtp.gmail.com";
+                        smtp.Timeout = int.MaxValue;
+                        smtp.UseDefaultCredentials = false;
+                        smtp.Credentials = (ICredentialsByHost)new NetworkCredential(
+                            mailAddress, password);
+                        smtp.EnableSsl = true;
+                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        MailMessage message = new MailMessage();
+                        message.Attachments.Clear();
+                        message.From = new MailAddress(mailAddress);
+                        message.IsBodyHtml = true;
+                        if(BccCC=="Bcc")
+                        {
+                            foreach (var item in MailInsert)
+                            {
+                                message.Bcc.Add(item.Email.ToString());
+                            }
+                        }
+                        else
+                        {
+                            foreach (var item in MailInsert)
+                            {
+                                message.CC.Add(item.Email.ToString());
+                            }
+                        }
+                        message.Subject = "";//TODO: TİTLE PROPERTYSİ İLE ÇEKMEK GEREKİR.
+                        message.Body = "";//TODO: BODY PROPERTYSİ İLE ÇEKMEK GEREKİR.
+                        if(FileInsert.Count>0)
+                        {
+                            foreach (var item in FileInsert)
+                            {
+                                message.Attachments.Add(new Attachment(item.FileName));
+                            }
+                        }
+                        smtp.Send(message);
+                    }
+                    else
+                    {
+                        CustomMessageBoxViewModel.ShowDialog("En az bir alıcı girmeniz gerekmektedir.",
+                            MessageBoxButton.OK, PackIconKind.Error);
+                    }
+                }
+                else
+                {
+                    if(MessageBoxResult.Yes==CustomMessageBoxViewModel.ShowDialog("Mail ayarları eksik şimdi oluşturmak ister misiniz?",
+                        MessageBoxButton.YesNo,PackIconKind.QuestionMark))
+                    {
+                        Settings settings = new Settings();
+                        settings.ShowDialog();
+                    }
+                }
+            }
+            else
+            {
+                CustomMessageBoxViewModel.ShowDialog("Lütfen internet bağlantınızı kontrol ediniz.",
+                    MessageBoxButton.OK, PackIconKind.Error);
+            }
+        }
+        #endregion
     }
 }

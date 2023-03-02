@@ -41,11 +41,9 @@
                       Margin="10 20 10 20"
                       ItemsSource="{Binding Path=CompanyList}"
                       SelectedItem="{Binding Path=MailCompanyDto}">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Ekle" Command="{Binding DataGridAddMail}" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataGridAddMail}"/>
+                    </DataGrid.InputBindings>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Firma Adı" Width="auto" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Sektör" Width="auto" Binding="{Binding Sector}"/>
@@ -137,15 +135,23 @@
                             x:Name="btnEkle"
                             Click="btnEkle_Click"/>
                     </DockPanel>
-                    <DataGrid Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False"
+                    <StackPanel Grid.Row="2" Margin="20 10 20 10">
+                        <TextBlock Text="{Binding DataGridCount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                   Visibility="{Binding AddMailDataGridVisible}" Foreground="DarkRed" HorizontalAlignment="Right"/>
+                        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False"
                           CanUserResizeRows="False" IsReadOnly="True" BorderBrush="#05b790" BorderThickness="0 0 0 1"
-                          Margin="20 10 20 10" ItemsSource="{Binding MailInsert,UpdateSourceTrigger=PropertyChanged}"
-                          x:Name="dataGridAlici">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Firma Adı" Width="400" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="E-Posta" Width="400" Binding="{Binding Email}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                          ItemsSource="{Binding MailInsert,UpdateSourceTrigger=PropertyChanged}"
+                          Visibility="{Binding AddMailDataGridVisible}"
+                          SelectedItem="{Binding MailCompanyInsertDto}">
+                            <DataGrid.InputBindings>
+                                <KeyBinding Key="Delete" Command="{Binding RemoveItem}"/>
+                            </DataGrid.InputBindings>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Firma Adı" Width="400" Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="E-Posta" Width="400" Binding="{Binding Email}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:HintAssist.Hint="Konu"
                          materialDesign:HintAssist.FloatingOffset="0,-20"
@@ -170,25 +176,24 @@
                              VerticalContentAlignment="Top"
                              HorizontalContentAlignment="Left"
                              FontSize="18"
-                             HorizontalAlignment="Center"
+                             HorizontalAlignment="Left"
                              Grid.Row="4"
-                             Margin="0,10,0,10" Width="870"
+                             Margin="20,10,10,20" Width="870"
                              x:Name="txtBody"/>
-                    <DockPanel Grid.Row="5">
-                        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False"
-                          CanUserResizeRows="False" IsReadOnly="True" BorderBrush="#05b790" BorderThickness="0 0 0 1"
-                          Margin="20"
-                                  Width="450"
-                                  Height="250">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Dosya Adı" Width="auto"/>
-                                <DataGridTextColumn Header="Dosya Yolu" Width="auto"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <Image Margin="20">
-
-                        </Image>
-                    </DockPanel>
+                    <DataGrid Grid.Row="5" AutoGenerateColumns="False" CanUserAddRows="False"
+                          CanUserResizeRows="False"
+                          IsReadOnly="True" BorderBrush="#05b790" BorderThickness="0 0 0 1"
+                          Margin="20" ItemsSource="{Binding FileInsert}"
+                          SelectedItem="{Binding FileAddOpenFileDto}"
+                          Visibility="{Binding FileVisibilty}">
+                        <DataGrid.InputBindings>
+                            <KeyBinding Key="Delete" Command="{Binding FileRemoveItem}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Dosya Adı" Width="auto" Binding="{Binding SafeFileName}"/>
+                            <DataGridTextColumn Header="Dosya Yolu" Width="auto" Binding="{Binding FileName}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                     <Grid Grid.Row="6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="610"/>
@@ -204,7 +209,8 @@
                             materialDesign:ButtonAssist.CornerRadius="15"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Bottom"
-                            Margin="10 10 20 10"/>
+                            Margin="10 10 20 10"
+                            Command="{Binding FileAddCommand}"/>
                         <Button Grid.Column="1" Content="Çıkış"
                             Background="DarkRed"
                             Foreground="White"
@@ -226,7 +232,8 @@
                             materialDesign:ButtonAssist.CornerRadius="15"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Bottom"
-                            Margin="10 10 20 10"/>
+                            Margin="10 10 20 10"
+                            Command="{Binding SendMail}"/>
                     </Grid>
                 </Grid>
             </Border>

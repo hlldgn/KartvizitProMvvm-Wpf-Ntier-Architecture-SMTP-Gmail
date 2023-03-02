@@ -81,12 +81,12 @@ namespace KartvizitPro.View
                 write.WriteElementString("Body",bodytxt.Text);
                 write.WriteEndElement();
                 write.Close();
-                CustomMessageBoxViewModel.ShowDialog("Bilgiler başarı ile eklendi.","Bilgi",MessageBoxButton.OK, PackIconKind.Information);
+                CustomMessageBoxViewModel.ShowDialog("Bilgiler başarı ile eklendi.",MessageBoxButton.OK, PackIconKind.Information);
                 this.Close();
             }
             else
             {
-                CustomMessageBoxViewModel.ShowDialog("Gmail adresinizi ve şifrenizi girmeniz gerekmektedir.", "Hata", MessageBoxButton.OK, PackIconKind.Error);
+                CustomMessageBoxViewModel.ShowDialog("Gmail adresinizi ve şifrenizi girmeniz gerekmektedir.", MessageBoxButton.OK, PackIconKind.Error);
             }
         }
 

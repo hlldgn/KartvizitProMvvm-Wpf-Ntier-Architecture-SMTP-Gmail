@@ -64,12 +64,11 @@
                          Text="{Binding Path=CompanySearch,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </Border>
-        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto"
+        <Border Grid.Column="1" Grid.Row="1" Background="WhiteSmoke" Style="{StaticResource borderShadow}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
                       materialDesign:ScrollBarAssist.ButtonsVisibility="Visible"
                       Style="{StaticResource MaterialDesignScrollViewer}"
-                      HorizontalScrollBarVisibility="Hidden"
-                      Background="LightGray">
-            <Border Background="WhiteSmoke">
+                      HorizontalScrollBarVisibility="Hidden">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -166,20 +165,24 @@
                          HorizontalAlignment="Left"
                          Margin="20 10 10 20"
                          Grid.Row="3"
-                         x:Name="txtTitle"/>
-                    <RichTextBox Style="{StaticResource MaterialDesignRichTextBox}"
-                             materialDesign:HintAssist.Hint="Mesaj"
-                             materialDesign:HintAssist.FloatingOffset="0,-20"
-                             BorderBrush="#c5c8cc"
-                             BorderThickness="0 0 0 1"
-                             Foreground="Black"
-                             VerticalContentAlignment="Top"
-                             HorizontalContentAlignment="Left"
-                             FontSize="18"
-                             HorizontalAlignment="Left"
-                             Grid.Row="4"
-                             Margin="20,10,10,20" Width="870"
-                             x:Name="txtBody"/>
+                         x:Name="txtTitle"
+                         Text="{Binding Title}"/>
+                    <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Mesaj"
+                         materialDesign:HintAssist.FloatingOffset="0,-20"
+                         BorderBrush="#c5c8cc"
+                         BorderThickness="0 0 0 1"
+                         Foreground="Black"
+                         Width="870"
+                         Height="50"
+                         TextAlignment="Left"
+                         VerticalContentAlignment="Bottom"
+                         FontSize="18"
+                         HorizontalAlignment="Left"
+                         Margin="20 10 10 20"
+                         Grid.Row="4"
+                         x:Name="txtBody"
+                         Text="{Binding Body}"/>
                     <DataGrid Grid.Row="5" AutoGenerateColumns="False" CanUserAddRows="False"
                           CanUserResizeRows="False"
                           IsReadOnly="True" BorderBrush="#05b790" BorderThickness="0 0 0 1"
@@ -236,7 +239,8 @@
                             Command="{Binding SendMail}"/>
                     </Grid>
                 </Grid>
-            </Border>
-        </ScrollViewer>
+            </ScrollViewer>
+
+        </Border>
     </Grid>
 </Window>

@@ -61,8 +61,6 @@ namespace KartvizitPro.View
         {
             if (txtGmailAddress.Text.Length > 0 && txtPassword.Password.Length > 0)
             {
-                TextRange bodytxt = new TextRange(txtBody.Document.ContentStart,
-                    txtBody.Document.ContentEnd);
                 XmlTextWriter write = new XmlTextWriter("Mail.xml", Encoding.UTF8);
                 write.Formatting = Formatting.Indented;
                 write.WriteStartDocument();
@@ -78,7 +76,7 @@ namespace KartvizitPro.View
                     write.WriteElementString("ccbcc", "1");
 
                 write.WriteElementString("Title", txtTitle.Text);
-                write.WriteElementString("Body",bodytxt.Text);
+                write.WriteElementString("Body",txtBody.Text);
                 write.WriteEndElement();
                 write.Close();
                 CustomMessageBoxViewModel.ShowDialog("Bilgiler başarı ile eklendi.",MessageBoxButton.OK, PackIconKind.Information);

@@ -1,0 +1,14 @@
+﻿<Window x:Class="KartvizitPro.View.SendMailView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:img="KartvizitPro.Resources"
+        xmlns:local="clr-namespace:KartvizitPro.View"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        mc:Ignorable="d" Height="300" Width="400" WindowStartupLocation="CenterScreen"
+        WindowStyle="None" ResizeMode="NoResize">
+    <Grid>
+        <Image gif:ImageBehavior.AnimatedSource="/sendmail.gif"/>
+    </Grid>
+</Window>

@@ -10,13 +10,16 @@ using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using System.Xml;
 
 namespace KartvizitPro.ViewModel
@@ -42,6 +45,8 @@ namespace KartvizitPro.ViewModel
             dataGridCount = String.Empty;
             mail = String.Empty;
             selectSector = String.Empty;
+            title = String.Empty;
+            body = String.Empty;
             fastAddMail = new RelayCommand(AddFastMail);
             manuelAddMail = new RelayCommand(AddManuelMail);
             dataGridAddMail = new RelayCommand(AddDataGridMail);
@@ -340,6 +345,22 @@ namespace KartvizitPro.ViewModel
         {
             get { return sendMail; }
         }
+        private string title;
+
+        public string Title
+        {
+            get { return title; }
+            set { title = value; OnPropertyChanged("Title"); }
+        }
+
+        private string body;
+
+        public string Body
+        {
+            get { return body; }
+            set { body = value; OnPropertyChanged("Body"); }
+        }
+
         private bool ReadMailSettings()
         {
             if (File.Exists("Mail.xml"))
@@ -376,8 +397,7 @@ namespace KartvizitPro.ViewModel
             }
             return false;
         }
-        private void SendToMail() // TODO: MAİL GÖNDERME İŞLEMİ BAŞARILI GERÇEKLEŞTİ
-            //BİRAZ CONFİGURATİON YAPMAK LAZIM SADECE KOLAY GELSİN HALİL :))))
+        private void SendToMail()
         {
             if (NetworkInterface.GetIsNetworkAvailable())
             {
@@ -398,7 +418,7 @@ namespace KartvizitPro.ViewModel
                         message.Attachments.Clear();
                         message.From = new MailAddress(mailAddress);
                         message.IsBodyHtml = true;
-                        if(BccCC=="Bcc")
+                        if (BccCC == "BCC")
                         {
                             foreach (var item in MailInsert)
                             {
@@ -412,16 +432,18 @@ namespace KartvizitPro.ViewModel
                                 message.CC.Add(item.Email.ToString());
                             }
                         }
-                        message.Subject = "";//TODO: TİTLE PROPERTYSİ İLE ÇEKMEK GEREKİR.
-                        message.Body = "";//TODO: BODY PROPERTYSİ İLE ÇEKMEK GEREKİR.
-                        if(FileInsert.Count>0)
+                        message.Subject = Title;
+                        message.Body = Body;
+                        if (FileInsert.Count > 0)
                         {
                             foreach (var item in FileInsert)
                             {
                                 message.Attachments.Add(new Attachment(item.FileName));
                             }
                         }
-                        smtp.Send(message);
+                        SendMailView view = new SendMailView(smtp,message);
+                        view.ShowDialog();
+                        //smtp.Send(message); //
                     }
                     else
                     {
@@ -431,8 +453,8 @@ namespace KartvizitPro.ViewModel
                 }
                 else
                 {
-                    if(MessageBoxResult.Yes==CustomMessageBoxViewModel.ShowDialog("Mail ayarları eksik şimdi oluşturmak ister misiniz?",
-                        MessageBoxButton.YesNo,PackIconKind.QuestionMark))
+                    if (MessageBoxResult.Yes == CustomMessageBoxViewModel.ShowDialog("Mail ayarları eksik şimdi oluşturmak ister misiniz?",
+                        MessageBoxButton.YesNo, PackIconKind.QuestionMark))
                     {
                         Settings settings = new Settings();
                         settings.ShowDialog();

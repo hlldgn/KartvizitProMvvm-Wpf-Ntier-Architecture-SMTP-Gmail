@@ -42,6 +42,9 @@ namespace KartvizitPro.View
         private void Worker_DoWork(object? sender, DoWorkEventArgs e)
         {
             _smtp.Send(_message);
+
+            //TODO: Artık program bitti bizdeki kartvizit listesi bu programa dahil edilecek.
+            // github için program düzenlenecek.
         }
     }
 }

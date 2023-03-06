@@ -10,16 +10,13 @@ using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using System.Xml;
 
 namespace KartvizitPro.ViewModel
@@ -120,7 +117,7 @@ namespace KartvizitPro.ViewModel
         private void GroupBySector()
         {
             var items = _companyService.GetAll();
-            var group = items.Select(x => x.Sector).Distinct().ToList();
+            var group = items.OrderBy(x=>x.Sector).Select(x => x.Sector).Distinct().ToList();
             Sector = group;
         }
         #endregion

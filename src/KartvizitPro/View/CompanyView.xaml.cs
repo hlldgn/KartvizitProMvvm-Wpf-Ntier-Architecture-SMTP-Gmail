@@ -1,4 +1,6 @@
-﻿using KartvizitPro.ViewModel;
+﻿using Business.Abstract;
+using Business.Autofac;
+using KartvizitPro.ViewModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,9 +13,11 @@ namespace KartvizitPro.View
     /// </summary>
     public partial class CompanyView : UserControl
     {
+        ICompanyService _companyService;
         public CompanyView()
         {
             InitializeComponent();
+            _companyService=InstanceFactory.GetInstance<ICompanyService>();
             this.DataContext = new CompanyViewModel();
         }
 

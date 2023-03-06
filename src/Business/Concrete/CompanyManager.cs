@@ -25,9 +25,6 @@ namespace Business.Concrete
                 return result;
             }
             entity.Email = ConvertChacracter(entity.Email);
-            //entity.Phone = ConvertPhone(entity.Phone);
-            //entity.Phone2 = ConvertPhone(entity.Phone2);
-            //entity.Fax = ConvertPhone(entity.Fax);
             _companyDal.Add(entity);
             return new SuccessResult();
         }

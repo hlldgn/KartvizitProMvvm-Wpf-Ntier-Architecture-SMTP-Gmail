@@ -1,5 +1,4 @@
 ﻿using KartvizitPro.View;
-using KartvizitPro.ViewModel;
 using System.Windows;
 
 namespace KartvizitPro

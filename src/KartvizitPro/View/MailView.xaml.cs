@@ -72,5 +72,10 @@ namespace KartvizitPro.View
                 read.Close();
             }
         }
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
+                this.DragMove();
+        }
     }
 }

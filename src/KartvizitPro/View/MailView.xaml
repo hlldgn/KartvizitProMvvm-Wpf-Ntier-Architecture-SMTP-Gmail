@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KartvizitPro.View"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" Height="768" Width="1366" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
@@ -20,7 +19,8 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border Background="#07b96f" CornerRadius="15 15 0 0" Grid.ColumnSpan="2">
+        <Border Background="#07b96f" CornerRadius="15 15 0 0" Grid.ColumnSpan="2"
+                MouseDown="Border_MouseDown">
             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="Mail Gönder" Foreground="White"
                            Margin="10,0,0,10" FontSize="20"
                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
@@ -45,9 +45,9 @@
                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataGridAddMail}"/>
                     </DataGrid.InputBindings>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Firma Adı" Width="auto" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Sektör" Width="auto" Binding="{Binding Sector}"/>
-                        <DataGridTextColumn Header="E-Posta" Width="auto" Binding="{Binding Email}"/>
+                        <DataGridTextColumn Header="Firma Adı" Width="*" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Sektör" Width="*" Binding="{Binding Sector}"/>
+                        <DataGridTextColumn Header="E-Posta" Width="*" Binding="{Binding Email}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBox Grid.Row="1" Margin="10 20 0 0" Width="420" VerticalAlignment="Bottom" HorizontalAlignment="Left"
@@ -166,7 +166,7 @@
                          Margin="20 10 10 20"
                          Grid.Row="3"
                          x:Name="txtTitle"
-                         Text="{Binding Title}"/>
+                         Text="{Binding Title,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:HintAssist.Hint="Mesaj"
                          materialDesign:HintAssist.FloatingOffset="0,-20"
@@ -182,7 +182,7 @@
                          Margin="20 10 10 20"
                          Grid.Row="4"
                          x:Name="txtBody"
-                         Text="{Binding Body}"/>
+                         Text="{Binding Body,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGrid Grid.Row="5" AutoGenerateColumns="False" CanUserAddRows="False"
                           CanUserResizeRows="False"
                           IsReadOnly="True" BorderBrush="#05b790" BorderThickness="0 0 0 1"

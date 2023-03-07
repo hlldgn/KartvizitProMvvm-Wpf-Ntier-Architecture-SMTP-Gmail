@@ -207,13 +207,24 @@ namespace KartvizitPro.ViewModel
             get { return mail; }
             set { mail = value; OnPropertyChanged("Mail"); }
         }
+        private string ConvertChacracter(string key)
+        {
+            string mail = key;
+            char[] tr = new char[] { 'ö', 'Ö', 'ü', 'Ü', 'ç', 'Ç', 'İ', 'ı', 'Ğ', 'ğ', 'Ş', 'ş' };
+            char[] en = new char[] { 'o', 'O', 'u', 'U', 'c', 'C', 'I', 'i', 'G', 'g', 'S', 's' };
+            for (int sayac = 0; sayac < tr.Length; sayac++)
+            {
+                mail = mail.Replace(tr[sayac], en[sayac]);
+            }
+            return mail;
+        }
         private void AddManuelMail()
         {
             if (mail.Length > 0 && mail != String.Empty)
             {
                 if (!MailExists(mail))
                 {
-                    mailInsert.Add(new MailCompanyInsertDto { Name = "Bilinmiyor", Email = mail });
+                    mailInsert.Add(new MailCompanyInsertDto { Name = "Bilinmiyor", Email = ConvertChacracter(mail) });
                     MailInsert = mailInsert;
                     AddMailDataGridVisible = Visibility.Visible;
                     DataGridCount = DataGridRowCountText(mailInsert);

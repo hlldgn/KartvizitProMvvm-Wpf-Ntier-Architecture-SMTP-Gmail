@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KartvizitPro.ViewModel;
+using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -28,7 +30,7 @@ namespace KartvizitPro.View
             InitializeComponent();
             _smtp = smtp;
             _message = message;
-            BackgroundWorker worker=new BackgroundWorker();
+            BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += Worker_DoWork;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             worker.RunWorkerAsync();
@@ -41,10 +43,16 @@ namespace KartvizitPro.View
 
         private void Worker_DoWork(object? sender, DoWorkEventArgs e)
         {
-            _smtp.Send(_message);
-
-            //TODO: Artık program bitti bizdeki kartvizit listesi bu programa dahil edilecek.
-            // github için program düzenlenecek.
+            try
+            {
+                System.Threading.Thread.Sleep(100);
+                _smtp.Send(_message);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
+
     }
 }

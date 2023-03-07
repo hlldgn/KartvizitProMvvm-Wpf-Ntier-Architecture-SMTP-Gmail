@@ -86,8 +86,12 @@ namespace KartvizitPro.ViewModel
             get { return companySearch; }
             set
             {
-                companySearch = value; SearchData(companySearch);
+                companySearch = value;
                 OnPropertyChanged("CompanySearch");
+                if (value.Length > 3)
+                    SearchData(companySearch);
+                else if (value.Length <= 0)
+                    LoadData();
             }
         }
         private void SearchData(string search)
@@ -117,7 +121,7 @@ namespace KartvizitPro.ViewModel
         private void GroupBySector()
         {
             var items = _companyService.GetAll();
-            var group = items.OrderBy(x=>x.Sector).Select(x => x.Sector).Distinct().ToList();
+            var group = items.OrderBy(x => x.Sector).Select(x => x.Sector).Distinct().ToList();
             Sector = group;
         }
         #endregion
@@ -315,10 +319,10 @@ namespace KartvizitPro.ViewModel
                     for (int i = 0; i < fileName.Count(); i++)
                     {
                         FileInfo info = new FileInfo(fileName[i]);
-                        totalSizeOpenFile+=info.Length;
+                        totalSizeOpenFile += info.Length;
                         long totalFilesSizeTypeMb = totalSizeOpenFile + totalSizeList;
 
-                        if(totalFilesSizeTypeMb<25*1024*1024)
+                        if (totalFilesSizeTypeMb < 25 * 1024 * 1024)
                         {
                             FileInsert.Add(new FileAddOpenFileDto
                             {
@@ -473,7 +477,7 @@ namespace KartvizitPro.ViewModel
                                 message.Attachments.Add(new Attachment(item.FileName));
                             }
                         }
-                        SendMailView view = new SendMailView(smtp,message);
+                        SendMailView view = new SendMailView(smtp, message);
                         view.ShowDialog();
                         //smtp.Send(message); //
                     }

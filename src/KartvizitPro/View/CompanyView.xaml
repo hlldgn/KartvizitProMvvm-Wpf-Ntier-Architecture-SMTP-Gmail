@@ -216,7 +216,7 @@
                          TextAlignment="Left"
                          VerticalContentAlignment="Bottom"
                          CharacterCasing="Upper"
-                         Text="{Binding Path=CompanySearch,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Path=CompanySearch,UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Mail"
                             Background="#05b790"
                             Foreground="White"

@@ -11,11 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Forms;
 
 namespace KartvizitPro.ViewModel
 {
-    public class CompanyViewModel:ViewModelBase
+    public class CompanyViewModel : ViewModelBase
     {
         private readonly ICompanyService _companyService;
         private readonly IMapper _Mapper;
@@ -29,6 +28,7 @@ namespace KartvizitPro.ViewModel
             addCommand = new RelayCommand(AddCompany);
             deleteCommand = new RelayCommand(DeleteCompany);
             updateCommand = new RelayCommand(UpdateCompany);
+            companyList = new ObservableCollection<CompanyDto>();
             LoadData();
         }
         #region DeleteOperation
@@ -42,7 +42,7 @@ namespace KartvizitPro.ViewModel
         {
             try
             {
-                if (MessageBoxResult.Yes== CustomMessageBoxViewModel.ShowDialog(CompanyDto.Name + " Adlı Firmayı silmek istediğinize emin misiniz?",
+                if (MessageBoxResult.Yes == CustomMessageBoxViewModel.ShowDialog(CompanyDto.Name + " Adlı Firmayı silmek istediğinize emin misiniz?",
                     MessageBoxButton.YesNo, PackIconKind.QuestionMark))
                 {
                     var company = mapper._mapper.Map<CompanyDto, Company>(CompanyDto);
@@ -71,7 +71,7 @@ namespace KartvizitPro.ViewModel
                 var message = _companyService.Add(company);
                 if (message.Message != null)
                 {
-                    CustomMessageBoxViewModel.ShowDialog(message.Message,MessageBoxButton.OK,PackIconKind.Error);
+                    CustomMessageBoxViewModel.ShowDialog(message.Message, MessageBoxButton.OK, PackIconKind.Error);
                 }
                 LoadData();
             }
@@ -82,16 +82,36 @@ namespace KartvizitPro.ViewModel
         }
         #endregion
         #region ListOperation
+        private void LoadData()
+        {
+            var companies = _companyService.GetAll();
+            var companyDto = mapper._mapper.Map<IEnumerable<Company>,
+                ObservableCollection<CompanyDto>>(companies);
+            CompanyList = companyDto;
+        }
+
+        private ObservableCollection<CompanyDto> companyList;
+
+        public ObservableCollection<CompanyDto> CompanyList
+        {
+            get { return companyList; }
+            set { companyList = value; OnPropertyChanged("CompanyList"); }
+        }
+        #endregion
+        #region SearchOperation
         private string companySearch;
 
         public string CompanySearch
         {
             get { return companySearch; }
             set
-            { 
-                companySearch = value; 
-                SearchData(companySearch); 
-                OnPropertyChanged("CompanySearch"); 
+            {
+                companySearch = value;
+                OnPropertyChanged("CompanySearch");
+                if(value.Length>3)
+                    SearchData(companySearch);
+                else if(value.Length<=0)
+                    LoadData();
             }
         }
 
@@ -101,20 +121,6 @@ namespace KartvizitPro.ViewModel
             var companyDto = mapper._mapper.Map<IEnumerable<Company>,
                 ObservableCollection<CompanyDto>>(companies);
             CompanyList = companyDto;
-        }
-        private void LoadData()
-        {
-            var companies = _companyService.GetAll();
-            var companyDto = mapper._mapper.Map<IEnumerable<Company>,
-                ObservableCollection<CompanyDto>>(companies);
-            CompanyList = companyDto;
-        }
-        private ObservableCollection<CompanyDto> companyList;
-
-        public ObservableCollection<CompanyDto> CompanyList
-        {
-            get { return companyList; }
-            set { companyList = value; OnPropertyChanged("CompanyList"); }
         }
         #endregion
         #region UpdateOperation

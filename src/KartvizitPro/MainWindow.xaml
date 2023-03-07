@@ -18,9 +18,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border Background="#07b96f" CornerRadius="15 0 0 0">
-            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="KartvizitPro v1.2" Foreground="White"
-                           Margin="15,0,0,0"
+            <DockPanel>
+                <Image Source="/logo.ico" Width="35" Height="35" Margin="15 5 5 5"/>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="KartvizitPro v1.2" Foreground="White"
+                           Margin="5"
                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+            </DockPanel>
         </Border>
         <Border Background="#07b96f" CornerRadius="0 15 0 0" Grid.Column="1" x:Name="brdrUpLeftRow"
                 MouseDown="brdrUpLeftRow_MouseDown">

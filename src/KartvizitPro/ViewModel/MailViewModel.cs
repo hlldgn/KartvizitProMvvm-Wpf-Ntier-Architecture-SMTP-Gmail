@@ -310,17 +310,41 @@ namespace KartvizitPro.ViewModel
                     FileVisibilty = Visibility.Visible;
                     string[] fileName = openFile.FileNames;
                     string[] safeFileName = openFile.SafeFileNames;
-
-                    for (int i = 0; i < openFile.FileNames.Count(); i++)
+                    long totalSizeList = FileSize();
+                    long totalSizeOpenFile = 0;
+                    for (int i = 0; i < fileName.Count(); i++)
                     {
-                        FileInsert.Add(new FileAddOpenFileDto
+                        FileInfo info = new FileInfo(fileName[i]);
+                        totalSizeOpenFile+=info.Length;
+                        long totalFilesSizeTypeMb = totalSizeOpenFile + totalSizeList;
+
+                        if(totalFilesSizeTypeMb<25*1024*1024)
                         {
-                            FileName = fileName[i],
-                            SafeFileName = safeFileName[i]
-                        });
+                            FileInsert.Add(new FileAddOpenFileDto
+                            {
+                                FileName = fileName[i],
+                                SafeFileName = safeFileName[i]
+                            });
+                        }
+                        else
+                        {
+                            CustomMessageBoxViewModel.ShowDialog("Eklenen Dosya boyutu 25 Mb dan fazla olamaz.",
+                                MessageBoxButton.OK, PackIconKind.Error);
+                            break;
+                        }
                     }
                 }
             }
+        }
+        private long FileSize()
+        {
+            long totalSize = 0;
+            foreach (var item in FileInsert)
+            {
+                FileInfo info = new FileInfo(item.FileName);
+                totalSize += info.Length;
+            }
+            return totalSize;
         }
         private Visibility fileVisibilty;
 

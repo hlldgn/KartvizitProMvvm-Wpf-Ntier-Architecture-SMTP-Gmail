@@ -304,9 +304,11 @@ namespace KartvizitPro.ViewModel
                 "|Jpeg (*.jpg)|*.jpg" +
                 "|Pdf (*.pdf)|*.pdf" +
                 "|Word (*.doc)|*.doc" +
-                "|Word (*.docx)|*.docx";
+                "|Word (*.docx)|*.docx"+
+                "|Winrar (*.rar)|*.rar"+
+                "|All Files (*.*)|*.*";
             openFile.RestoreDirectory = true;
-            openFile.FilterIndex = 3;
+            openFile.FilterIndex = 9;
             if (DialogResult.OK == openFile.ShowDialog())
             {
                 if (openFile.FileNames.Length > 0)

@@ -69,7 +69,7 @@ namespace KartvizitPro.View
             else
             {
                 Image_MessageBox.Kind = icon.Value;
-                Image_MessageBox.Visibility = Visibility.Visible;
+                Image_MessageBox.Visibility = 0;
             }
         }
 

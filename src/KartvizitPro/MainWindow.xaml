@@ -30,6 +30,8 @@
             <DockPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 15 0">
                 <materialDesign:PackIcon Kind="Settings" Style="{DynamicResource btnHelp}" x:Name="btnSetting"
                                          PreviewMouseLeftButtonDown="btnSetting_PreviewMouseLeftButtonDown"/>
+                <materialDesign:PackIcon Kind="WindowMinimize" Style="{DynamicResource btnHelp}" x:Name="btnMinimize"
+                                         PreviewMouseLeftButtonDown="btnMinimize_PreviewMouseLeftButtonDown"/>
                 <materialDesign:PackIcon Kind="CloseBold" Style="{DynamicResource btnHelp}" x:Name="btnClose"
                                          PreviewMouseLeftButtonDown="btnClose_PreviewMouseLeftButtonDown"/>
             </DockPanel>

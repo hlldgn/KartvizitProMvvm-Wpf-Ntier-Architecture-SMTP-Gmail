@@ -29,5 +29,10 @@ namespace KartvizitPro
             if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
                 this.DragMove();
         }
+
+        private void btnMinimize_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            WindowState=WindowState.Minimized;
+        }
     }
 }

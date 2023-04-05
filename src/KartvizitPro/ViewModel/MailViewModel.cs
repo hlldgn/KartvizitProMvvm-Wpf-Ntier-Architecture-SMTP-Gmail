@@ -471,7 +471,7 @@ namespace KartvizitPro.ViewModel
                             }
                         }
                         message.Subject = Title;
-                        message.Body = Body;
+                        message.Body = Body.Replace("\n","<br />");
                         if (FileInsert.Count > 0)
                         {
                             foreach (var item in FileInsert)
